@@ -76,6 +76,18 @@ $(function(){
     $(".tarefa-item").click(onTarefaItemClick);
   }
 
+  $(document).ready(function() {
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: 'http://localhost:8000/todos',
+      success: function(todos) {
+        todos.forEach(todo => {
+          addTarefa(todo.description);
+        });
+      }
+    });
+  });
 
   $(".tarefa-delete").click(onTarefaDeleteClick);
 
