@@ -7,6 +7,12 @@ $(function(){
       .hide('slow', function() {
         $(this).remove();
       });
+
+    var id = $(this).parent(".tarefa-item").attr('rel');
+    $.ajax({
+      type: 'DELETE',
+      url: 'http://localhost:8000/todos/' + id,
+    });
   }
 
   function onTarefaItemClick() {
@@ -30,9 +36,18 @@ $(function(){
   }
 
   function salvarEdicaoPendente(el) {
-    var texto = el.children(".tarefa-edit").val();
+    var description = el.children(".tarefa-edit").val();
+    var id = el.children(".tarefa-edit").parent(".tarefa-item").attr('rel');
+
+    $.ajax({
+      type: 'PUT',
+      dataType: 'json',
+      data: {"description": description},
+      url: 'http://localhost:8000/todos/' + id
+    });
+
     el.empty();
-    el.append("<div class='tarefa-texto'>"+texto+"</div>")
+    el.append("<div class='tarefa-texto'>"+description+"</div>")
       .append("<div class='tarefa-delete'></div>")
       .append("<div class='clear'></div>");
 
@@ -42,7 +57,6 @@ $(function(){
   }
 
   function onTarefaEditKeydown(event) {
-    console.log(event.keyCode);
     if (event.keyCode === 13) {
       salvarEdicaoPendente(ultimoClick);
       ultimoClick = undefined;
@@ -52,7 +66,7 @@ $(function(){
   function onTarefaKeydown(event) {
     var description = $("#tarefa").val()
 
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && description.length > 0) {
       $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -62,7 +76,7 @@ $(function(){
           addTarefa(todo.id, todo.description);
           $("#tarefa").val("");
         }
-      })
+      });
     }
   }
 

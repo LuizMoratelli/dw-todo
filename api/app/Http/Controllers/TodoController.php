@@ -12,9 +12,9 @@ class TodoController extends Controller
         return Todo::all();
     }
 
-    public function show(Todo $todo)
+    public function show($id)
     {
-        return $todo;
+        return Todo::find($id);
     }
 
     public function store(Request $request)
@@ -23,15 +23,25 @@ class TodoController extends Controller
         return response()->json($todo, 201);
     }
 
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request, $id)
     {
-        $todo->update($request->all());
+        $todo = Todo::find($id);
+
+        if ($todo) {
+            $todo->update($request->all());
+        }
+
         return response()->json($todo, 200);
     }
 
-    public function delete(Todo $todo)
+    public function delete($id)
     {
-        $todo->delete();
+        $todo = Todo::find($id);
+
+        if ($todo) {
+            $todo->delete();
+        }
+
         return response()->json(null, 204);
     }
 }
