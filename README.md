@@ -1,6 +1,6 @@
 # Desenvolvimento Web II - Todo List
 
-## Configuração:
+## :hammer: Configuração:
 
 ### 1. Criar arquivo `.env` e configurar o banco de dados como o exemplo abaixo.
 ```
@@ -16,5 +16,3 @@ DB_USERNAME=postgres
 
 ### 3. Migrate
 `php artisan migrate`
-
-:hammer:
