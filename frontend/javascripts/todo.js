@@ -50,15 +50,26 @@ $(function(){
   }
 
   function onTarefaKeydown(event) {
+    var description = $("#tarefa").val()
+
     if (event.keyCode === 13) {
-      addTarefa($("#tarefa").val());
-      $("#tarefa").val("");
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {"description": description},
+        url: 'http://localhost:8000/todos',
+        success: function(todo) {
+          addTarefa(todo.id, todo.description);
+          $("#tarefa").val("");
+        }
+      })
     }
   }
 
-  function addTarefa(text) {
+  function addTarefa(id, text) {
     var tarefa = $("<div />")
                   .addClass("tarefa-item")
+                  .attr('rel', id)
                   .append($("<div />")
                     .addClass("tarefa-texto")
                     .text(text)
@@ -76,6 +87,13 @@ $(function(){
     $(".tarefa-item").click(onTarefaItemClick);
   }
 
+  $(".tarefa-delete").click(onTarefaDeleteClick);
+
+  $(".tarefa-item").click(onTarefaItemClick);
+
+  $("#tarefa").keydown(onTarefaKeydown);
+  $("#tarefa").focus();
+
   $(document).ready(function() {
     $.ajax({
       type: 'GET',
@@ -83,16 +101,9 @@ $(function(){
       url: 'http://localhost:8000/todos',
       success: function(todos) {
         todos.forEach(todo => {
-          addTarefa(todo.description);
+          addTarefa(todo.id, todo.description);
         });
       }
     });
   });
-
-  $(".tarefa-delete").click(onTarefaDeleteClick);
-
-  $(".tarefa-item").click(onTarefaItemClick);
-
-  $("#tarefa").keydown(onTarefaKeydown);
-  $("#tarefa").focus();
 });
